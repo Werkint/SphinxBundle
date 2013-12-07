@@ -1,6 +1,6 @@
 parameters:
     werkint.sphinx.indexer.class: Werkint\Bundle\SphinxBundle\Services\Indexer
-    werkint.sphinx.search.class: Werkint\Bundle\SphinxBundle\Services\Sphinxsearch
+    werkint.sphinx.search.class: Werkint\Bundle\SphinxBundle\Services\Sphinx
 
 services:
     werkint.sphinx.indexer:

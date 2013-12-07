@@ -23,8 +23,8 @@ class Indexer
     /**
      * Constructor.
      *
-     * @param string $bin The path to the indexer executable.
-     * @param array $indexes The list of indexes that can be used.
+     * @param string $bin     The path to the indexer executable.
+     * @param array  $indexes The list of indexes that can be used.
      */
     public function __construct(
         $bin = '/usr/bin/indexer',
@@ -39,32 +39,37 @@ class Indexer
      */
     public function rotateAll()
     {
-        $this->rotate(array_keys($this->indexes));
+        $this->rotate(null);
     }
 
     /**
      * Rebuild and rotate the specified index(es).
      *
-     * @param array|string $indexes The index(es) to rotate.
+     * @param array|string|null $indexes The index(es) to rotate.
+     * @return bool
      * @throws \RuntimeException
      */
     public function rotate($indexes)
     {
-        $pb = new ProcessBuilder();
-        $pb
-            ->inheritEnvironmentVariables()
+        $pbd = new ProcessBuilder();
+        $pbd->inheritEnvironmentVariables()
+            ->add('sudo')
+            ->add('-u')
+            ->add('sphinxsearch')
             ->add($this->bin)
             ->add('--rotate');
         if (is_array($indexes)) {
             foreach ($indexes as &$label) {
                 if (isset($this->indexes[$label])) {
-                    $pb->add($this->indexes[$label]);
+                    $pbd->add($this->indexes[$label]);
                 }
             }
         } elseif (is_string($indexes)) {
             if (isset($this->indexes[$indexes])) {
-                $pb->add($this->indexes[$indexes]);
+                $pbd->add($this->indexes[$indexes]);
             }
+        } elseif ($indexes === null) {
+            $pbd->add('--all');
         } else {
             throw new \RuntimeException(sprintf(
                 'Indexes can only be an array or string, %s given.',
@@ -72,7 +77,7 @@ class Indexer
             ));
         }
 
-        $indexer = $pb->getProcess();
+        $indexer = $pbd->getProcess();
         $code = $indexer->run();
 
         if (($errStart = strpos($indexer->getOutput(), 'FATAL:')) !== false) {
@@ -82,10 +87,12 @@ class Indexer
                 $errMsg = substr($indexer->getOutput(), $errStart);
             }
             throw new \RuntimeException(sprintf(
-                'Error rotating indexes: "%s".',
+                'Error rotating indexes: "%s". code: ' . $code,
                 rtrim($errMsg)
             ));
         }
+
+        return true;
     }
 
 }
