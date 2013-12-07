@@ -1,0 +1,17 @@
+parameters:
+    werkint.sphinx.indexer.class: Werkint\Bundle\SphinxBundle\Services\Indexer
+    werkint.sphinx.search.class: Werkint\Bundle\SphinxBundle\Services\Sphinxsearch
+
+services:
+    werkint.sphinx.indexer:
+        class: %werkint.sphinx.indexer.class%
+        arguments:
+            - %werkint_sphinx.indexer.bin%
+            - %werkint_sphinx.indexes%
+    werkint.sphinx.search:
+        class: %werkint.sphinx.search.class%
+        arguments:
+            - %werkint_sphinx.searchd.host%
+            - %werkint_sphinx.searchd.port%
+            - %werkint_sphinx.searchd.socket%
+            - %werkint_sphinx.indexes%

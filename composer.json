@@ -1,0 +1,35 @@
+{
+    "name":        "werkint/sphinx-bundle",
+    "description": "Sphinxsearch bundle for Symfony2",
+    "license":     "GPL-3.0+",
+    "authors":     [
+        {
+            "name":  "Ryan Rogers",
+            "email": "ryan@timewasted.me"
+        },
+        {
+            "name":  "Bogdan Yurov",
+            "email": "bogdan@yurov.me"
+        }
+    ],
+    "require":     {
+        "symfony/framework-bundle": "2.3.*",
+
+        "neutron/sphinxsearch-api": "*",
+
+        "php": ">=5.4"
+    },
+    "target-dir":  "Werkint/Bundle/SphinxBundle",
+    "autoload":    {
+        "psr-0": {
+            "Werkint\\Bundle\\SphinxBundle": ""
+        }
+    },
+    "extra":       {
+        "branch-alias": {
+            "dev-master": "0.1.x-dev"
+        }
+    },
+
+    "minimum-stability": "dev"
+}
